@@ -1,32 +1,18 @@
-# React + TypeScript + Vite
+# Project: Memory Card
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+### Introduction
 
-Currently, two official plugins are available:
+Here we go again with a new project! Let’s make sure you understand the concepts so far. The main goal of this project is to implement the concepts learned so far by using hooks to manage and utilize state while fetching and using data from an external API.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+### How the game works
 
-## React Compiler
+Go play around with [this student’s](https://heldersrvio.github.io/memory-card-game/) solution to find out for yourself how the Memory game works. Although this example uses cartoon characters, you can use anything you like for your game.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Assignment
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+1. Create a new React Project.
+2. Take some time to think about the features you want to implement, which components you need, how to structure your application, and how to get the images from an API. Your application should include a scoreboard, which counts the current score, and a “Best Score”, which shows the highest score you’ve achieved thus far. There should be a function that displays the cards in a random order anytime a user clicks one. Be sure to invoke that function when the component mounts.
+3. You also need a handful of cards that display images and possibly informational text. These images and texts need to be fetched from an external API. You can use anything from Giphy to a Pokemon API.
+4. Now that you’ve thought about the structure of your application, set up the folder structure and start creating the components.
+5. Style your application so you can show it off!
+6. As always, push the project to GitHub, and don’t forget to deploy it.
