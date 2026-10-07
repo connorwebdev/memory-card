@@ -6,6 +6,7 @@ interface CardInfo {
   hp: number;
   typeId: string;
   image: string;
+  flavorText: string;
 }
 
 export default function Card({ name, url }) {
@@ -15,6 +16,7 @@ export default function Card({ name, url }) {
     hp: 0,
     typeId: null,
     image: null,
+    flavorText: "",
   });
 
   // https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small/12.png
@@ -24,33 +26,48 @@ export default function Card({ name, url }) {
   }
 
   useEffect(() => {
-    fetch(url)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setCardInfo((e) => ({
-          ...e,
-          id: data.id,
+    async function fetchCardInfo() {
+      try {
+        const pokemonResponse = await fetch(url);
+        const pokemon = await pokemonResponse.json();
+
+        const speciesResponse = await fetch(pokemon.species.url);
+        const species = await speciesResponse.json();
+
+        setCardInfo({
+          id: pokemon.id,
           name: name,
-          hp: data.stats[0].base_stat,
-          typeId: data.types[0].type.url.split("/").slice(-2)[0],
-          image: data.sprites.front_default,
-        }));
-      })
-      .catch((error) => console.error(error.message));
+          hp: pokemon.stats[0].base_stat,
+          typeId: pokemon.types[0].type.url.split("/").slice(-2)[0],
+          image: pokemon.sprites.front_default,
+          flavorText: species.flavor_text_entries[0].flavor_text,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    fetchCardInfo();
   }, []);
 
   return (
-    <div className="card">
+    <div className={`card type-${cardInfo.typeId}`}>
       <div className="top">
         <h2>{capitalizeFirstLetter(cardInfo.name)}</h2>
-        <p className="hp">{cardInfo.hp} HP</p>
-        <img
-          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small/${cardInfo.typeId}.png`}
-          alt="Type Icon"
-        />
+        <div className="info">
+          <p className="hp">{cardInfo.hp} HP</p>
+          <div className="type-wrap">
+            <img
+              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small/${cardInfo.typeId}.png`}
+              alt="Type Icon"
+            />
+          </div>
+        </div>
       </div>
-      <img src={cardInfo.image} alt={name} />
+      <div className="img-wrap">
+        <img src={cardInfo.image} alt={name} />
+      </div>
+      <p className="flavor">{cardInfo.flavorText}</p>
     </div>
   );
 }

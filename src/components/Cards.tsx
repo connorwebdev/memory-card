@@ -5,7 +5,7 @@ export default function Cards() {
   let [cards, setCards] = useState([]);
 
   useEffect(() => {
-    fetch("https://pokeapi.co/api/v2/pokemon/?offset=0&limit=12")
+    fetch("https://pokeapi.co/api/v2/pokemon/?offset=0&limit=9")
       .then((response) => response.json())
       .then((data) => {
         setCards(data.results);
