@@ -19,8 +19,6 @@ export default function Card({ name, url }) {
     flavorText: "",
   });
 
-  // https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/types/generation-ix/scarlet-violet/small/12.png
-
   function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   }

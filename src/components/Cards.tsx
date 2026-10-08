@@ -8,7 +8,7 @@ export default function Cards() {
     fetch("https://pokeapi.co/api/v2/pokemon/?offset=0&limit=9")
       .then((response) => response.json())
       .then((data) => {
-        setCards(data.results);
+        setCards(data.results.sort(() => Math.random() - 0.5));
       })
       .catch((error) => console.error(error.message));
   }, []);
