@@ -5,12 +5,20 @@ export default function Cards() {
   let [cards, setCards] = useState([]);
 
   useEffect(() => {
-    fetch("https://pokeapi.co/api/v2/pokemon/?offset=0&limit=9")
-      .then((response) => response.json())
-      .then((data) => {
-        setCards(data.results.sort(() => Math.random() - 0.5));
-      })
-      .catch((error) => console.error(error.message));
+    async function fetchCards() {
+      try {
+        const cardsResponse = await fetch(
+          "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=9"
+        );
+        const parsedCards = await cardsResponse.json();
+
+        setCards(parsedCards.results.sort(() => Math.random() - 0.5));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    fetchCards();
   }, []);
 
   return (

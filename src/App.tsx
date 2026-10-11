@@ -39,7 +39,7 @@ function App() {
           <p className="current-score">Current Score: {currentScore}</p>
         </div>
       </div>
-      <Cards />
+      <Cards setClickedCards={setClickedCards} />
     </main>
   );
 }
