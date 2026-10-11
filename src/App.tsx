@@ -1,12 +1,57 @@
-// import { useState } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Cards from "./components/Cards";
 
 function App() {
+  const [cards, setCards] = useState([]);
   const [highScore, setHighScore] = useState(0);
   const [currentScore, setCurrentScore] = useState(0);
   const [clickedCards, setClickedCards] = useState([]);
+
+  function handleCardClick(cardId) {
+    if (clickedCards.includes(cardId)) {
+      setClickedCards([]);
+      setCurrentScore(0);
+      console.log("repeat");
+    } else {
+      setClickedCards([...clickedCards, cardId]);
+      setCurrentScore(clickedCards.length + 1);
+      clickedCards.length + 1 > highScore
+        ? setHighScore(clickedCards.length + 1)
+        : null;
+      console.log("added");
+    }
+    shuffleCards(cards);
+  }
+
+  function shuffleCards(array) {
+    const shuffledCards = [...array];
+    for (let i = shuffledCards.length - 1; i >= 1; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledCards[i], shuffledCards[j]] = [
+        shuffledCards[j],
+        shuffledCards[i],
+      ];
+    }
+    setCards(shuffledCards);
+  }
+
+  useEffect(() => {
+    async function fetchCards() {
+      try {
+        const cardsResponse = await fetch(
+          "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=9"
+        );
+        const parsedCards = await cardsResponse.json();
+
+        setCards(parsedCards.results.sort(() => Math.random() - 0.5));
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    fetchCards();
+  }, []);
 
   return (
     <main>
@@ -39,7 +84,7 @@ function App() {
           <p className="current-score">Current Score: {currentScore}</p>
         </div>
       </div>
-      <Cards setClickedCards={setClickedCards} />
+      <Cards cards={cards} handleCardClick={handleCardClick} />
     </main>
   );
 }

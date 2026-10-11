@@ -9,7 +9,7 @@ interface CardInfo {
   flavorText: string;
 }
 
-export default function Card({ name, url }) {
+export default function Card({ handleCardClick, name, url }) {
   let [cardInfo, setCardInfo] = useState<CardInfo>({
     id: 0,
     name: "",
@@ -21,6 +21,11 @@ export default function Card({ name, url }) {
 
   function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+  }
+
+  function handleClick(e) {
+    const cardID = e.target.closest(".card").dataset.name;
+    handleCardClick(cardID);
   }
 
   useEffect(() => {
@@ -49,7 +54,11 @@ export default function Card({ name, url }) {
   }, []);
 
   return (
-    <div className={`card type-${cardInfo.typeId}`}>
+    <div
+      className={`card type-${cardInfo.typeId}`}
+      data-name={cardInfo.name}
+      onClick={handleClick}
+    >
       <div className="top">
         <h2>{capitalizeFirstLetter(cardInfo.name)}</h2>
         <div className="info">
