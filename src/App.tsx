@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import "./App.css";
 import Cards from "./components/Cards";
 import { type CardData } from "./types";
+import loader from "./assets/loader.png";
 
 function App() {
+  const [isLoading, setisLoading] = useState(true);
   const [cards, setCards] = useState<CardData[]>([]);
   const [highScore, setHighScore] = useState(0);
   const [currentScore, setCurrentScore] = useState(0);
@@ -57,13 +59,35 @@ function App() {
         const parsedCards = await cardsResponse.json();
 
         setCards(parsedCards.results.sort(() => Math.random() - 0.5));
+        setisLoading(false);
       } catch (err) {
         console.error(err);
       }
     }
-
     fetchCards();
   }, []);
+
+  let displayArea: ReactNode;
+  if (isLoading) {
+    displayArea = (
+      <div className="loader">
+        <img src={loader} alt="Loader Icon" />
+      </div>
+    );
+  } else {
+    if (hasWon) {
+      displayArea = (
+        <>
+          <p className="congrats">You won!</p>
+          <button onClick={resetGame} className="reset">
+            Reset
+          </button>
+        </>
+      );
+    } else {
+      displayArea = <Cards cards={cards} handleCardClick={handleCardClick} />;
+    }
+  }
 
   return (
     <main>
@@ -96,16 +120,7 @@ function App() {
           <p className="current-score">Current Score: {currentScore}</p>
         </div>
       </div>
-      {!hasWon ? (
-        <Cards cards={cards} handleCardClick={handleCardClick} />
-      ) : (
-        <>
-          <p className="congrats">You won!</p>
-          <button onClick={resetGame} className="reset">
-            Reset
-          </button>
-        </>
-      )}
+      {displayArea}
     </main>
   );
 }
