@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, type MouseEvent } from "react";
+import { type CardClickFunction } from "../types";
 
 interface CardInfo {
   id: number;
@@ -9,23 +10,31 @@ interface CardInfo {
   flavorText: string;
 }
 
-export default function Card({ handleCardClick, name, url }) {
+interface CardOutput {
+  handleCardClick: CardClickFunction;
+  name: string;
+  url: string;
+}
+
+export default function Card({ handleCardClick, name, url }: CardOutput) {
   let [cardInfo, setCardInfo] = useState<CardInfo>({
     id: 0,
     name: "",
     hp: 0,
-    typeId: null,
-    image: null,
+    typeId: "",
+    image: "",
     flavorText: "",
   });
 
-  function capitalizeFirstLetter(val) {
+  function capitalizeFirstLetter(val: string) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   }
 
-  function handleClick(e) {
-    const cardID = e.target.closest(".card").dataset.name;
-    handleCardClick(cardID);
+  function handleClick(e: MouseEvent<HTMLDivElement>) {
+    const cardID = e.currentTarget.dataset.name;
+    if (cardID) {
+      handleCardClick(cardID);
+    }
   }
 
   useEffect(() => {

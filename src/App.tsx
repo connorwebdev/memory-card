@@ -1,30 +1,42 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import Cards from "./components/Cards";
+import { type CardData } from "./types";
 
 function App() {
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState<CardData[]>([]);
   const [highScore, setHighScore] = useState(0);
   const [currentScore, setCurrentScore] = useState(0);
-  const [clickedCards, setClickedCards] = useState([]);
+  const [clickedCards, setClickedCards] = useState<string[]>([]);
+  const [hasWon, setHasWon] = useState(false);
 
-  function handleCardClick(cardId) {
+  function handleCardClick(cardId: string) {
     if (clickedCards.includes(cardId)) {
       setClickedCards([]);
       setCurrentScore(0);
-      console.log("repeat");
     } else {
       setClickedCards([...clickedCards, cardId]);
-      setCurrentScore(clickedCards.length + 1);
-      clickedCards.length + 1 > highScore
-        ? setHighScore(clickedCards.length + 1)
-        : null;
-      console.log("added");
+      const runScore = clickedCards.length + 1;
+      setCurrentScore(runScore);
+      if (runScore > highScore) {
+        setHighScore(runScore);
+      }
+      if (runScore === cards.length) {
+        setHasWon(true);
+      }
     }
     shuffleCards(cards);
   }
 
-  function shuffleCards(array) {
+  function resetGame() {
+    setHasWon(false);
+    setClickedCards([]);
+    setHighScore(0);
+    setCurrentScore(0);
+    shuffleCards(cards);
+  }
+
+  function shuffleCards(array: CardData[]) {
     const shuffledCards = [...array];
     for (let i = shuffledCards.length - 1; i >= 1; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -59,8 +71,8 @@ function App() {
         <div className="col-1">
           <h1>Pokemon Memory Game</h1>
           <p>
-            Gain points by clicking an image. If you click an image you've
-            already clicked then the score will be reset.
+            Gain points by clicking a unique card. If you click a card you've
+            already clicked then the score will be reset. Try to catch 'em all!
           </p>
           <p className="credit">
             Photo by{" "}
@@ -84,7 +96,16 @@ function App() {
           <p className="current-score">Current Score: {currentScore}</p>
         </div>
       </div>
-      <Cards cards={cards} handleCardClick={handleCardClick} />
+      {!hasWon ? (
+        <Cards cards={cards} handleCardClick={handleCardClick} />
+      ) : (
+        <>
+          <p className="congrats">You won!</p>
+          <button onClick={resetGame} className="reset">
+            Reset
+          </button>
+        </>
+      )}
     </main>
   );
 }
